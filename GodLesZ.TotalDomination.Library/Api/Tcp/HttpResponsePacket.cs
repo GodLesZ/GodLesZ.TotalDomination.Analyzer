@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using GodLesZ.TotalDomination.Analyzer.Library.Json;
+using PacketDotNet;
 using SharpPcap;
 
 namespace GodLesZ.TotalDomination.Analyzer.Library {
@@ -61,6 +62,7 @@ namespace GodLesZ.TotalDomination.Analyzer.Library {
                 RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
             );
 
+            RequestHost = ((IPv4Packet)_ethernetPacket.PayloadPacket).SourceAddress.ToString();
             var responseStatus = matchRequestData.Groups["status"].Value.Trim();
             var responseHeader = matchRequestData.Groups["header"].Value.Trim();
             var responseBody = matchRequestData.Groups["body"].Value.Trim();

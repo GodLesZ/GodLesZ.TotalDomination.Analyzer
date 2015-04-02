@@ -64,7 +64,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GodLesZ.Library\GodLesZ.Library.csproj">
+      <Project>{22086451-A9A2-414C-8A81-5BE02FC5C8EE}</Project>
+      <Name>GodLesZ.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

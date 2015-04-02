@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
+using GodLesZ.TotalDomination.Analyzer.Library;
 using GodLesZ.TotalDomination.Library;
+using GodLesZ.TotalDomination.Library.Api.Http;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -27,7 +30,7 @@ namespace GodLesZ.TotalDomination.AnalyzerGui {
             worker.DoWork += delegate {
                 var devices = CaptureDeviceList.Instance;
                 foreach (var device in devices) {
-                    _devices.Add((PcapDevice) device);
+                    _devices.Add((PcapDevice)device);
                 }
             };
             worker.RunWorkerCompleted += delegate {
@@ -50,7 +53,7 @@ namespace GodLesZ.TotalDomination.AnalyzerGui {
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e) {
             if (_deviceListener.IsActive) {
                 SetStatus("Stop device listener ..");
-                
+
                 _deviceListener.Stop();
             }
 
@@ -68,6 +71,29 @@ namespace GodLesZ.TotalDomination.AnalyzerGui {
             SetStatus("Starting device listener ..");
 
             _deviceListener.SwitchDevice(_devices[_targetDeviceIndex]);
+            _deviceListener.OnPacket += delegate(HttpPacket packet) {
+                if (RequestBuilder.Instance.IsInitialized || !(packet is HttpRequestPacket)) {
+                    var debug = HttpPacket.HttpEncoding.GetString(packet.RawCapture.Data);
+                    return;
+                }
+
+                var requestPacket = packet as HttpRequestPacket;
+                var validServerMethods = new[] {
+                    "GetMap", 
+                    "GetAlliance",
+                    "AutoRefresh",
+                    "Alliance.Refresh",
+                    "GetUserNotesList"
+                };
+                if (validServerMethods.Any(m => m == requestPacket.HeaderServerMethod) == false) {
+                    return;
+                }
+
+                var requestBuilder = RequestBuilder.Instance;
+                requestBuilder.Initialize(requestPacket);
+
+                SetStatus("Request data sniffed successfully");
+            };
             _deviceListener.Start();
 
             SetStatus("Device listener started. Please start the game now");

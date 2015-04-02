@@ -113,6 +113,10 @@
     <None Include="Resources\uranium_icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GodLesZ.Library\GodLesZ.Library.csproj">
+      <Project>{22086451-a9a2-414c-8a81-5be02fc5c8ee}</Project>
+      <Name>GodLesZ.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GodLesZ.TotalDomination.Library\GodLesZ.TotalDomination.Library.csproj">
       <Project>{25FBA5BD-CD9D-4219-A1BB-518BD9E150C1}</Project>
       <Name>GodLesZ.TotalDomination.Library</Name>

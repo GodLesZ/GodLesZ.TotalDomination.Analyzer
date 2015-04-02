@@ -11,7 +11,9 @@ namespace GodLesZ.TotalDomination.Analyzer.Library {
         public static readonly Encoding HttpEncoding = Encoding.GetEncoding("iso-8859-1"); // iso-8859-15 / iso-8859-1
 
         protected RawCapture mRawCapture;
+        protected EthernetPacket _ethernetPacket;
         protected readonly Dictionary<string, string> mHeaderData = new Dictionary<string, string>();
+
 
         public TcpPacket BasePacket {
             get;
@@ -20,6 +22,11 @@ namespace GodLesZ.TotalDomination.Analyzer.Library {
 
         public RawCapture RawCapture {
             get { return mRawCapture; }
+        }
+
+        public string RequestHost {
+            get;
+            protected set;
         }
 
         public string BodyString {
@@ -33,9 +40,9 @@ namespace GodLesZ.TotalDomination.Analyzer.Library {
 
 
         protected HttpPacket(RawCapture packet) {
-            var ethPacket = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
+            _ethernetPacket = (EthernetPacket)Packet.ParsePacket(packet.LinkLayerType, packet.Data);
             mRawCapture = packet;
-            BasePacket = (TcpPacket)ethPacket.PayloadPacket.PayloadPacket;
+            BasePacket = (TcpPacket)_ethernetPacket.PayloadPacket.PayloadPacket;
         }
 
 

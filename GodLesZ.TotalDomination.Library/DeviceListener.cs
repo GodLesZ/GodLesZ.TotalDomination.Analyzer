@@ -69,7 +69,6 @@ namespace GodLesZ.TotalDomination.Library {
             }
 
             try {
-                _device.StopCapture();
                 _device.Close();
             } catch { }
 
